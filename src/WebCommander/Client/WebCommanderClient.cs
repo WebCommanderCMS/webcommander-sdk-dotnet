@@ -15,17 +15,27 @@ using WebCommander.Resources.Countries;
 using WebCommander.Resources.Currencies;
 using WebCommander.Resources.CustomerGroups;
 using WebCommander.Resources.Customers;
+using WebCommander.Resources.DashboardBanners;
+using WebCommander.Resources.DashboardKpis;
+using WebCommander.Resources.DashboardReports;
+using WebCommander.Resources.DashboardSections;
+using WebCommander.Resources.Dashboards;
 using WebCommander.Resources.DiscountProfiles;
 using WebCommander.Resources.Email;
+using WebCommander.Resources.GiftCards;
 using WebCommander.Resources.InventoryLocations;
 using WebCommander.Resources.OrderCustomFields;
 using WebCommander.Resources.OrderFlags;
+using WebCommander.Resources.OrderPreviews;
 using WebCommander.Resources.Orders;
 using WebCommander.Resources.Pages;
 using WebCommander.Resources.PaymentGateways;
 using WebCommander.Resources.Products;
 using WebCommander.Resources.ShippingClasses;
 using WebCommander.Resources.ShippingMethods;
+using WebCommander.Resources.ShippingProfiles;
+using WebCommander.Resources.ShippingRates;
+using WebCommander.Resources.ShippingRules;
 using WebCommander.Resources.Settings.AnimationEffects;
 using WebCommander.Resources.Settings.CustomerPortal;
 using WebCommander.Resources.Settings.EcommerceSettings;
@@ -267,6 +277,12 @@ public sealed class WebCommanderClient : IAsyncDisposable, IDisposable
     public Email Email =>
         _email ??= new Email(this);
 
+    private GiftCards? _giftCards;
+
+    /// <summary>The gift card endpoints, built on first use.</summary>
+    public GiftCards GiftCards =>
+        _giftCards ??= new GiftCards(this);
+
     private OrderFlags? _orderFlags;
 
     /// <summary>The order flag endpoints, built on first use.</summary>
@@ -290,6 +306,24 @@ public sealed class WebCommanderClient : IAsyncDisposable, IDisposable
     /// <summary>The shipping method endpoints, built on first use.</summary>
     public ShippingMethods ShippingMethods =>
         _shippingMethods ??= new ShippingMethods(this);
+
+    private ShippingProfiles? _shippingProfiles;
+
+    /// <summary>The shipping profile endpoints, built on first use.</summary>
+    public ShippingProfiles ShippingProfiles =>
+        _shippingProfiles ??= new ShippingProfiles(this);
+
+    private ShippingRates? _shippingRates;
+
+    /// <summary>The shipping rate endpoints, built on first use.</summary>
+    public ShippingRates ShippingRates =>
+        _shippingRates ??= new ShippingRates(this);
+
+    private ShippingRules? _shippingRules;
+
+    /// <summary>The shipping rule endpoints, built on first use.</summary>
+    public ShippingRules ShippingRules =>
+        _shippingRules ??= new ShippingRules(this);
 
     private TaxCodes? _taxCodes;
 
@@ -395,6 +429,36 @@ public sealed class WebCommanderClient : IAsyncDisposable, IDisposable
     public CustomerGroups CustomerGroups =>
         _customerGroups ??= new CustomerGroups(this);
 
+    private Dashboards? _dashboards;
+
+    /// <summary>The dashboard layout endpoints, built on first use.</summary>
+    public Dashboards Dashboards =>
+        _dashboards ??= new Dashboards(this);
+
+    private DashboardBanners? _dashboardBanners;
+
+    /// <summary>The dashboard banner endpoints, built on first use.</summary>
+    public DashboardBanners DashboardBanners =>
+        _dashboardBanners ??= new DashboardBanners(this);
+
+    private DashboardKpis? _dashboardKpis;
+
+    /// <summary>The dashboard KPI endpoints, built on first use.</summary>
+    public DashboardKpis DashboardKpis =>
+        _dashboardKpis ??= new DashboardKpis(this);
+
+    private DashboardReports? _dashboardReports;
+
+    /// <summary>The dashboard report endpoints, built on first use.</summary>
+    public DashboardReports DashboardReports =>
+        _dashboardReports ??= new DashboardReports(this);
+
+    private DashboardSections? _dashboardSections;
+
+    /// <summary>The dashboard section endpoints, built on first use.</summary>
+    public DashboardSections DashboardSections =>
+        _dashboardSections ??= new DashboardSections(this);
+
     private DiscountProfiles? _discountProfiles;
 
     /// <summary>The discount profile and coupon endpoints, built on first use.</summary>
@@ -406,6 +470,12 @@ public sealed class WebCommanderClient : IAsyncDisposable, IDisposable
     /// <summary>The order custom field endpoints, built on first use.</summary>
     public OrderCustomFields OrderCustomFields =>
         _orderCustomFields ??= new OrderCustomFields(this);
+
+    private OrderPreviews? _orderPreviews;
+
+    /// <summary>The order preview endpoints, built on first use.</summary>
+    public OrderPreviews OrderPreviews =>
+        _orderPreviews ??= new OrderPreviews(this);
 
     private Orders? _orders;
 

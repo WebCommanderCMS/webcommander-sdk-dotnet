@@ -215,6 +215,19 @@ public sealed class SearchResultPage : BoundResource
                 ResponseFormat = responseFormat,
             }, cancellationToken);
 
+    /// <summary>Rebuild the store's search index; <c>202</c> once it has started, with no body to send.
+    /// <c>POST /admin/search/reindex</c></summary>
+    public Task<ApiResponse> ReindexSearchAsync(
+        bool? raiseOnError = null, CancellationToken cancellationToken = default,
+        string? responseFormat = null) =>
+        Client.SendPostRequestAsync(SearchResultPageUrls.SearchReindex,
+            new RequestOptions
+            {
+                RaiseOnError = raiseOnError,
+                ResponseFormat = responseFormat,
+                DtoType = typeof(SearchReindex),
+            }, cancellationToken);
+
     private static Dictionary<string, object?> Section(string section) =>
         new() { ["section"] = section };
 

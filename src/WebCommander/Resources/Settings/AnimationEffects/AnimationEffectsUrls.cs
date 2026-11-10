@@ -8,4 +8,7 @@ public static class AnimationEffectsUrls
 
     public const string AnimationEffectsSection =
         "/api/{api_version}/admin/settings/animation_effects/{section}";
+
+    public const string AnimationEffectsCustomLoader =
+        "/api/{api_version}/admin/settings/animation_effects/custom_loader";
 }

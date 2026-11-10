@@ -455,9 +455,12 @@ public sealed class ProductReviewer : Dto
 }
 
 /// <summary>One review; the store's <c>productId</c> is the one camelCase key in the body. <c>comment</c> and
-/// <c>created_at</c> repeat <c>review</c> and <c>date</c>; <c>created_at</c> carries a <c>Z</c>.</summary>
+/// <c>created_at</c> repeat <c>review</c> and <c>date</c>; <c>created_at</c> carries a <c>Z</c>. A single review answers under <c>review</c>, which inside a row is its
+/// text.</summary>
 public sealed class ProductReview : Dto
 {
+    protected override string? EnvelopeKey => "review";
+
     public long? Id { get; set; }
 
     public long? ProductId { get; set; }
@@ -1468,4 +1471,482 @@ public sealed class ProductStockInput : Dto
     public string? Note { get; set; }
 
     public IReadOnlyList<ProductStockLocationInput?>? Locations { get; set; }
+}
+
+/// <summary>The count's answer; <c>count</c> repeats <c>total</c>.</summary>
+public sealed class ProductCount : Dto
+{
+    public long? Total { get; set; }
+
+    public long? Count { get; set; }
+}
+
+/// <summary>The product that holds a SKU; <c>status</c> is <c>trashed</c> for one in the trash.</summary>
+public sealed class ProductSkuHolder : Dto
+{
+    public long? Id { get; set; }
+
+    public string? Name { get; set; }
+
+    public string? Status { get; set; }
+}
+
+/// <summary>A SKU's verdict: <c>available</c> and <c>is_exist</c> are opposites, <c>product</c> and <c>id</c> name the
+/// holder and are <c>null</c> or absent when the SKU is free. A variant's SKU names the variant's own product.</summary>
+public sealed class ProductSkuCheck : Dto
+{
+    public bool? Available { get; set; }
+
+    public bool? IsExist { get; set; }
+
+    public ProductSkuHolder? Product { get; set; }
+
+    public long? Id { get; set; }
+}
+
+/// <summary>One row of a special listing: a product's storefront prices.</summary>
+public sealed class ProductSpecial : Dto
+{
+    public long? Id { get; set; }
+
+    public string? Sku { get; set; }
+
+    public string? Name { get; set; }
+
+    public string? Image { get; set; }
+
+    public double? BasePrice { get; set; }
+
+    public bool? IsOnSale { get; set; }
+
+    public string? OnSaleAmountType { get; set; }
+
+    public double? EffectivePrice { get; set; }
+
+    public double? ActualBasePrice { get; set; }
+
+    public double? OnSaleAmount { get; set; }
+
+    public double? ExpectToPayPrice { get; set; }
+
+    public double? ExpectToPayPriceWithTax { get; set; }
+
+    public double? TaxExclusiveBasePrice { get; set; }
+
+    public double? TaxExclusiveSalePrice { get; set; }
+
+    public double? Tax { get; set; }
+
+    public double? PreviousPriceToDisplay { get; set; }
+
+    public double? ActualPriceToDisplay { get; set; }
+
+    public double? SalePrice { get; set; }
+
+    /// <summary><c>yyyy-MM-ddTHH:mm:ss</c>.</summary>
+    public string? Updated { get; set; }
+
+    public string? Url { get; set; }
+
+    public string? Summary { get; set; }
+
+    public string? Description { get; set; }
+}
+
+/// <summary>A special listing. <c>max</c> is the page size applied; <c>status</c> is <c>success</c> on a per-customer
+/// answer with no rows, and absent otherwise.</summary>
+public sealed class ProductSpecialPage : Dto
+{
+    public string? Status { get; set; }
+
+    public long? Total { get; set; }
+
+    public long? Max { get; set; }
+
+    public long? Offset { get; set; }
+
+    public IReadOnlyList<ProductSpecial?>? Products { get; set; }
+
+    public Pagination? Pagination { get; set; }
+}
+
+/// <summary>The bulk delete's body, no envelope: <c>ids</c> is required and must not be empty.</summary>
+public sealed class ProductsBulkDeleteInput : Dto
+{
+    public IReadOnlyList<long?>? Ids { get; set; }
+}
+
+/// <summary>One id the bulk delete did not trash; <c>reason</c> is <c>not_found</c> for an unknown id.</summary>
+public sealed class ProductBulkDeleteError : Dto
+{
+    public long? Id { get; set; }
+
+    public string? Reason { get; set; }
+}
+
+/// <summary>The bulk delete's answer, <c>200</c> even when an id failed: counts, and the failed ids.</summary>
+public sealed class ProductsBulkDeleteResult : Dto
+{
+    public long? Deleted { get; set; }
+
+    public long? Failed { get; set; }
+
+    public IReadOnlyList<ProductBulkDeleteError?>? Errors { get; set; }
+}
+
+/// <summary>One product's reviews; the listing has no paging block.</summary>
+public sealed class ProductReviewList : Dto
+{
+    public IReadOnlyList<ProductReview?>? Reviews { get; set; }
+}
+
+/// <summary>The review moderation body, no envelope; <c>status</c> is <c>pending</c> or <c>approved</c>.</summary>
+public sealed class ProductReviewPatchInput : Dto
+{
+    public string? Status { get; set; }
+
+    public double? Rating { get; set; }
+
+    public string? Comment { get; set; }
+}
+
+// Not a Dto: the Dto name rule cannot spell base64.
+/// <summary>One image to store: <c>filename</c> and its <c>base64</c> content.</summary>
+public sealed class ProductImageFileInput
+{
+    [JsonPropertyName("filename"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? Filename { get; set; }
+
+    [JsonPropertyName("base64"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? Base64 { get; set; }
+}
+
+/// <summary>The <c>image_and_video</c> block of an image upload.</summary>
+public sealed class ProductImageAndVideoInput : Dto
+{
+    public IReadOnlyList<ProductImageFileInput?>? Images { get; set; }
+}
+
+/// <summary>The image upload's body, <c>{"product": {"image_and_video": {"images": [...]}}}</c>.</summary>
+public sealed class ProductImageUploadInput : Dto
+{
+    protected override string? EnvelopeKey => "product";
+
+    public ProductImageAndVideoInput? ImageAndVideo { get; set; }
+}
+
+/// <summary>What an upload answers: <c>product</c> holds the files just stored, <c>transaction_no</c> is the
+/// product's own.</summary>
+public sealed class ProductMediaUploaded : Dto
+{
+    public ProductImageAndVideo? Product { get; set; }
+
+    public string? TransactionNo { get; set; }
+}
+
+/// <summary>The media upload's body, no envelope: <c>type</c> (only <c>images</c> is accepted), <c>filename</c> and
+/// <c>content</c>, base64 or a <c>data:</c> URI. <c>position</c> is in the collection and refused
+/// <c>unknown_field</c> by the store.</summary>
+public sealed class ProductMediaUploadInput : Dto
+{
+    public string? Type { get; set; }
+
+    public string? Filename { get; set; }
+
+    public string? Content { get; set; }
+
+    public long? Position { get; set; }
+}
+
+/// <summary>The stock figures a top-up writes.</summary>
+public sealed class ProductInventoryStockInput : Dto
+{
+    public bool? TrackInventory { get; set; }
+
+    public long? AvailableStock { get; set; }
+
+    public long? LowLevelStock { get; set; }
+}
+
+/// <summary>The top-up's body, <c>{"product": {"product_pricing_and_stock": {...}}}</c>.</summary>
+public sealed class ProductInventoryInput : Dto
+{
+    protected override string? EnvelopeKey => "product";
+
+    public ProductInventoryStockInput? ProductPricingAndStock { get; set; }
+}
+
+/// <summary>The top-up's answer. <c>transaction_no</c> is the product's own from before the write, <c>null</c> on its
+/// first top-up, though the header is stored on the product by then.</summary>
+public sealed class ProductInventoryResult : Dto
+{
+    public string? Status { get; set; }
+
+    public string? Message { get; set; }
+
+    public string? TransactionNo { get; set; }
+}
+
+/// <summary>The media order body, no envelope: <c>type</c> <c>images</c> and every image's <c>id</c> once, in the order wanted.</summary>
+public sealed class ProductMediaOrderInput : Dto
+{
+    public string? Type { get; set; }
+
+    public IReadOnlyList<long?>? Ids { get; set; }
+}
+
+/// <summary>The media order's answer: the product's images in their new order.</summary>
+public sealed class ProductMediaOrder : Dto
+{
+    public IReadOnlyList<ProductMediaImage?>? Images { get; set; }
+}
+
+/// <summary>The image move body, no envelope: the 1-based <c>position</c>, the only field it takes.</summary>
+public sealed class ProductMediaImagePatchInput : Dto
+{
+    public long? Position { get; set; }
+}
+
+/// <summary>The robots and canonical URL settings.</summary>
+public sealed class ProductSeoAdvancedSettings : Dto
+{
+    public bool? Enabled { get; set; }
+
+    public string? RobotsMeta { get; set; }
+
+    public string? CanonicalUrl { get; set; }
+}
+
+/// <summary>Which Google Analytics events the product page sends.</summary>
+public sealed class ProductSeoGoogleAnalyticsEvents : Dto
+{
+    public bool? Enabled { get; set; }
+
+    public bool? ViewItem { get; set; }
+
+    public bool? ViewItemList { get; set; }
+
+    public bool? ViewCart { get; set; }
+
+    public bool? AddToWishList { get; set; }
+
+    public bool? RemoveFromCart { get; set; }
+
+    public bool? BeginCheckout { get; set; }
+
+    public bool? AddShippingInfo { get; set; }
+
+    public bool? AddPaymentInfo { get; set; }
+
+    public bool? Purchase { get; set; }
+}
+
+/// <summary>Google Analytics on the product page.</summary>
+public sealed class ProductSeoGoogleAnalytics : Dto
+{
+    public bool? Enabled { get; set; }
+
+    public string? MeasurementId { get; set; }
+
+    public ProductSeoGoogleAnalyticsEvents? Events { get; set; }
+}
+
+/// <summary>Which Facebook Pixel events the product page sends.</summary>
+public sealed class ProductSeoFacebookPixelEvents : Dto
+{
+    public bool? Enabled { get; set; }
+
+    public bool? Search { get; set; }
+
+    public bool? AddToCart { get; set; }
+
+    public bool? AddToWishList { get; set; }
+
+    public bool? InitiateCheckout { get; set; }
+
+    public bool? AddPaymentInfo { get; set; }
+
+    public bool? Purchase { get; set; }
+}
+
+/// <summary>The Facebook Pixel on the product page.</summary>
+public sealed class ProductSeoFacebookPixel : Dto
+{
+    public bool? Enabled { get; set; }
+
+    public string? PixelId { get; set; }
+
+    public ProductSeoFacebookPixelEvents? Events { get; set; }
+}
+
+/// <summary>The Google Ads conversion the product page reports.</summary>
+public sealed class ProductSeoGoogleAds : Dto
+{
+    public string? ConversionId { get; set; }
+
+    public string? ConversionLabel { get; set; }
+}
+
+/// <summary>The product page's analytics settings.</summary>
+public sealed class ProductSeoAnalytics : Dto
+{
+    public bool? Enabled { get; set; }
+
+    public string? Platform { get; set; }
+
+    public ProductSeoGoogleAnalytics? GoogleAnalytics { get; set; }
+
+    public ProductSeoFacebookPixel? FacebookPixel { get; set; }
+
+    public ProductSeoGoogleAds? GoogleAds { get; set; }
+}
+
+/// <summary>One custom code block and whether it is on.</summary>
+public sealed class ProductSeoCode : Dto
+{
+    public bool? Enabled { get; set; }
+
+    public string? Code { get; set; }
+}
+
+/// <summary>The custom code added to the product page's header and footer.</summary>
+public sealed class ProductSeoCustomCode : Dto
+{
+    public ProductSeoCode? Header { get; set; }
+
+    public ProductSeoCode? Footer { get; set; }
+}
+
+/// <summary>The title, description and image one network shows for the product.</summary>
+public sealed class ProductSeoSocialCard : Dto
+{
+    public string? Title { get; set; }
+
+    public string? Description { get; set; }
+
+    public string? ImageUrl { get; set; }
+}
+
+/// <summary>The product's social card, and one per network.</summary>
+public sealed class ProductSeoSocial : Dto
+{
+    public string? Title { get; set; }
+
+    public string? Description { get; set; }
+
+    public string? ImageUrl { get; set; }
+
+    public ProductSeoSocialCard? Facebook { get; set; }
+
+    public ProductSeoSocialCard? Twitter { get; set; }
+
+    public ProductSeoSocialCard? Linkedin { get; set; }
+}
+
+/// <summary>What the product offers AI search; each field is <c>null</c> until set.</summary>
+public sealed class ProductSeoAiVisibility : Dto
+{
+    public object? StructuredAttributes { get; set; }
+
+    public object? ProductFaq { get; set; }
+
+    public object? CitabilityScore { get; set; }
+
+    public object? JsonLd { get; set; }
+}
+
+/// <summary>A product's SEO sub-resource, under <c>seo</c>.</summary>
+public sealed class ProductSeo : Dto
+{
+    protected override string? EnvelopeKey => "seo";
+
+    public string? UrlHandle { get; set; }
+
+    public string? Title { get; set; }
+
+    public string? Description { get; set; }
+
+    public ProductSeoAdvancedSettings? AdvancedSettings { get; set; }
+
+    public ProductSeoAnalytics? Analytics { get; set; }
+
+    public ProductSeoCustomCode? CustomCode { get; set; }
+
+    public ProductSeoSocial? Social { get; set; }
+
+    public ProductSeoAiVisibility? AiVisibility { get; set; }
+}
+
+/// <summary>A product's stock figure and low-stock level, with whether tracking is on.</summary>
+public sealed class ProductStockTracking : Dto
+{
+    public bool? Enabled { get; set; }
+
+    public long? AvailableStock { get; set; }
+
+    public long? LowStockLevel { get; set; }
+}
+
+/// <summary>The stock block of the stock patch's answer.</summary>
+public sealed class ProductStockSummary : Dto
+{
+    public ProductStockTracking? Tracking { get; set; }
+
+    public bool? MultiLocationEnabled { get; set; }
+
+    public IReadOnlyList<ProductStockLocation?>? Locations { get; set; }
+
+    public IReadOnlyList<ProductStockVariation?>? Variations { get; set; }
+}
+
+/// <summary>The admin who made a stock change.</summary>
+public sealed class ProductStockAdjustmentUser : Dto
+{
+    public long? Id { get; set; }
+
+    public string? Name { get; set; }
+}
+
+/// <summary>One stock change; <c>delta</c> is the new figure minus the old.</summary>
+public sealed class ProductStockAdjustment : Dto
+{
+    public long? Id { get; set; }
+
+    public long? Delta { get; set; }
+
+    public string? Note { get; set; }
+
+    public string? TransactionNo { get; set; }
+
+    public ProductStockAdjustmentUser? CreatedBy { get; set; }
+
+    public string? CreatedAt { get; set; }
+}
+
+/// <summary>The stock patch's body, no envelope. <c>tracking</c> merges; <c>locations</c> sets the stock per location; <c>note</c> and <c>transaction_no</c> go on the adjustment.</summary>
+public sealed class ProductStockPatchInput : Dto
+{
+    public ProductStockTracking? Tracking { get; set; }
+
+    public IReadOnlyList<ProductStockLocationInput?>? Locations { get; set; }
+
+    public string? Note { get; set; }
+
+    public string? TransactionNo { get; set; }
+}
+
+/// <summary>The stock patch's answer: the stock now, and the adjustment it recorded.</summary>
+public sealed class ProductStockPatchResult : Dto
+{
+    public ProductStockSummary? Stock { get; set; }
+
+    public ProductStockAdjustment? Adjustment { get; set; }
+}
+
+/// <summary>One page of a product's stock history.</summary>
+public sealed class ProductStockAdjustmentPage : Dto
+{
+    public IReadOnlyList<ProductStockAdjustment?>? Adjustments { get; set; }
+
+    public Pagination? Pagination { get; set; }
 }

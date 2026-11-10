@@ -133,6 +133,21 @@ public sealed class Trash : BoundResource
             }, cancellationToken);
     }
 
+    /// <summary>The links outside the store that a permanent delete of a trashed item would break; <c>404</c> for an
+    /// item that is not in the trash. <c>GET /admin/trash/{trash_type}/{trash_item_id}/external_links</c></summary>
+    public Task<ApiResponse> GetTrashItemExternalLinksAsync(
+        string trashType, object trashItemId,
+        bool? raiseOnError = null, CancellationToken cancellationToken = default,
+        string? responseFormat = null) =>
+        Client.SendGetRequestAsync(TrashUrls.TrashItemExternalLinks,
+            new RequestOptions
+            {
+                PathParams = Item(trashType, trashItemId),
+                RaiseOnError = raiseOnError,
+                ResponseFormat = responseFormat,
+                DtoType = typeof(TrashExternalLinks),
+            }, cancellationToken);
+
     private static Dictionary<string, object?> Item(string trashType, object trashItemId) =>
         new() { ["trash_type"] = trashType, ["trash_item_id"] = trashItemId };
 }

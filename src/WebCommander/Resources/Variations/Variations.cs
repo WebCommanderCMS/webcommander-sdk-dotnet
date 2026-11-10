@@ -216,6 +216,73 @@ public sealed class Variations : BoundResource
             }, cancellationToken);
     }
 
+    /// <summary>Read one variant under <c>variation</c> -
+    /// <c>GET /admin/products/{product_id}/variations/{variation_id}</c>. <c>variationId</c> is a variant's
+    /// <c>variation_id</c>, the <c>id</c> the list also carries; it is not the variant's own <c>product_id</c>. It
+    /// reads <c>active</c> where the list reads <c>available</c>.</summary>
+    public Task<ApiResponse> GetProductVariationAsync(
+        object productId, object variationId,
+        bool? raiseOnError = null, CancellationToken cancellationToken = default,
+        string? responseFormat = null) =>
+        Client.SendGetRequestAsync(VariationsUrls.ProductVariation,
+            new RequestOptions
+            {
+                PathParams = ProductVariantIds(productId, variationId),
+                RaiseOnError = raiseOnError,
+                ResponseFormat = responseFormat,
+                DtoType = typeof(ProductVariantDetail),
+            }, cancellationToken);
+
+    /// <summary>Delete one variant; <c>204</c>, and a second delete is <c>404</c>. <c>variationId</c> is a variant's
+    /// <c>variation_id</c>. <c>DELETE /admin/products/{product_id}/variations/{variation_id}</c></summary>
+    public Task<ApiResponse> DeleteProductVariationAsync(
+        object productId, object variationId,
+        bool? raiseOnError = null, CancellationToken cancellationToken = default,
+        string? responseFormat = null) =>
+        Client.SendDeleteRequestAsync(VariationsUrls.ProductVariation,
+            new RequestOptions
+            {
+                PathParams = ProductVariantIds(productId, variationId),
+                RaiseOnError = raiseOnError,
+                ResponseFormat = responseFormat,
+            }, cancellationToken);
+
+    /// <summary>Change one variant; a bare, partial body. A SKU another variant holds is <c>409</c>.
+    /// <c>PATCH /admin/products/{product_id}/variations/{variation_id}</c></summary>
+    public Task<ApiResponse> PatchProductVariationAsync(
+        object productId, object variationId, object payload,
+        bool? raiseOnError = null, CancellationToken cancellationToken = default,
+        string? responseFormat = null)
+    {
+        RequirePayload(payload);
+        return Client.SendPatchRequestAsync(VariationsUrls.ProductVariation,
+            new RequestOptions
+            {
+                PathParams = ProductVariantIds(productId, variationId),
+                JsonBody = payload,
+                RaiseOnError = raiseOnError,
+                ResponseFormat = responseFormat,
+                DtoType = typeof(ProductVariantPatchResult),
+            }, cancellationToken);
+    }
+
+    /// <summary>Delete every variant of a product; <c>204</c>, also when it has none.
+    /// <c>DELETE /admin/products/{product_id}/variations</c></summary>
+    public Task<ApiResponse> DeleteProductVariationsAsync(
+        object productId,
+        bool? raiseOnError = null, CancellationToken cancellationToken = default,
+        string? responseFormat = null) =>
+        Client.SendDeleteRequestAsync(VariationsUrls.ProductVariations,
+            new RequestOptions
+            {
+                PathParams = ProductId(productId),
+                RaiseOnError = raiseOnError,
+                ResponseFormat = responseFormat,
+            }, cancellationToken);
+
+    private static Dictionary<string, object?> ProductVariantIds(object productId, object variationId) =>
+        new() { ["product_id"] = productId, ["variation_id"] = variationId };
+
     private static Dictionary<string, object?> Id(object variationId) =>
         new() { ["variation_id"] = variationId };
 

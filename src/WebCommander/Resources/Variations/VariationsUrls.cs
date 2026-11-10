@@ -13,6 +13,9 @@ public static class VariationsUrls
     public const string ProductVariations =
         "/api/{api_version}/admin/products/{product_id}/variations";
 
+    public const string ProductVariation =
+        "/api/{api_version}/admin/products/{product_id}/variations/{variation_id}";
+
     public const string ProductVariationsBulk =
         "/api/{api_version}/admin/products/{product_id}/variations/bulk";
 

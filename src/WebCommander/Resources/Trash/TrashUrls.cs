@@ -12,6 +12,9 @@ public static class TrashUrls
     public const string TrashItemRestore =
         "/api/{api_version}/admin/trash/{trash_type}/{trash_item_id}/restore";
 
+    public const string TrashItemExternalLinks =
+        "/api/{api_version}/admin/trash/{trash_type}/{trash_item_id}/external_links";
+
     public const string TrashBulkRestore = "/api/{api_version}/admin/trash/bulk-restore";
 
     public const string TrashBulkDelete = "/api/{api_version}/admin/trash/bulk-delete";

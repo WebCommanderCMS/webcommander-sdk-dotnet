@@ -10,6 +10,12 @@ public sealed class CustomLoader : Dto
     public string? FileUrl { get; set; }
 }
 
+/// <summary>The <c>custom_loader</c> section: the uploaded preloader image, or <c>enabled: false</c>.</summary>
+public sealed class CustomLoaderSection : Dto
+{
+    public CustomLoader? CustomLoader { get; set; }
+}
+
 /// <summary>One entry of <c>preloader_custom_page</c> as a read sends it; a write takes page ids.</summary>
 public sealed class PreloaderPage : Dto
 {

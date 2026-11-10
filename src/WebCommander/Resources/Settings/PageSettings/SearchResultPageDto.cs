@@ -203,3 +203,13 @@ public sealed class SearchResultPage : Dto
 
     public object? FieldMetadata { get; set; }
 }
+
+/// <summary>The reindex's answer: <c>status</c> <c>accepted</c>, <c>clean</c> and a <c>message</c>.</summary>
+public sealed class SearchReindex : Dto
+{
+    public string? Status { get; set; }
+
+    public bool? Clean { get; set; }
+
+    public string? Message { get; set; }
+}

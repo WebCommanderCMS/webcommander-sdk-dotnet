@@ -1,4 +1,5 @@
 using WebCommander.Client;
+using WebCommander.Errors;
 
 namespace WebCommander.Resources.Settings.AnimationEffects;
 
@@ -85,6 +86,45 @@ public sealed class AnimationEffects : BoundResource
                 ResponseFormat = responseFormat,
                 DtoType = typeof(AnimationEffectsDto.AnimationEffects),
             }, cancellationToken);
+    }
+
+    /// <summary>Upload the custom preloader image - <c>POST /admin/settings/animation_effects/custom_loader</c>.
+    /// The part is named <c>file</c> (svg, png, jpg, jpeg or gif), and a <c>string</c> or <c>byte[]</c> is its
+    /// contents, not a path. <c>201</c>, and the loader reads <c>enabled: true</c>.</summary>
+    public Task<ApiResponse> UploadAnimationEffectsCustomLoaderAsync(
+        IReadOnlyDictionary<string, object?> files,
+        bool? raiseOnError = null, CancellationToken cancellationToken = default,
+        string? responseFormat = null)
+    {
+        RequireFiles(files);
+        return Client.SendPostRequestAsync(AnimationEffectsUrls.AnimationEffectsCustomLoader,
+            new RequestOptions
+            {
+                Files = files,
+                RaiseOnError = raiseOnError,
+                ResponseFormat = responseFormat,
+                DtoType = typeof(AnimationEffectsDto.CustomLoaderSection),
+            }, cancellationToken);
+    }
+
+    /// <summary>Remove the custom preloader image - <c>DELETE /admin/settings/animation_effects/custom_loader</c>;
+    /// <c>204</c>, also when there is none.</summary>
+    public Task<ApiResponse> DeleteAnimationEffectsCustomLoaderAsync(
+        bool? raiseOnError = null, CancellationToken cancellationToken = default,
+        string? responseFormat = null) =>
+        Client.SendDeleteRequestAsync(AnimationEffectsUrls.AnimationEffectsCustomLoader,
+            new RequestOptions
+            {
+                RaiseOnError = raiseOnError,
+                ResponseFormat = responseFormat,
+            }, cancellationToken);
+
+    private static void RequireFiles(IReadOnlyDictionary<string, object?> files)
+    {
+        if (files is null || files.Count == 0)
+            throw new SdkUsageError("files is required and must carry the upload: this endpoint's "
+                + "whole body is the multipart part named 'file', and an empty one sends no "
+                + "multipart body at all");
     }
 
     private static Dictionary<string, object?> Section(string section) =>

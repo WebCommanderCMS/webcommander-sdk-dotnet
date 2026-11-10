@@ -6,6 +6,8 @@ public static class SearchResultPageUrls
     public const string SearchResultPage =
         "/api/{api_version}/admin/settings/page_settings/search_result_page";
 
+    public const string SearchReindex = "/api/{api_version}/admin/search/reindex";
+
     public const string SearchResultPageSection =
         "/api/{api_version}/admin/settings/page_settings/search_result_page/{section}";
 

@@ -128,6 +128,8 @@ public sealed class ProductVariantPricing : Dto
 
     public double? SalePrice { get; set; }
 
+    public double? CompareAtPrice { get; set; }
+
     public bool? IsOnSale { get; set; }
 
     public string? SaleAmountType { get; set; }
@@ -378,4 +380,91 @@ public sealed class ProductVariationsImportResult : Dto
     public string? Message { get; set; }
 
     public long? TotalVariants { get; set; }
+}
+
+/// <summary>One variant read alone, under <c>variation</c>. It is on or off as <c>active</c>, where the list and the
+/// bulk write say <c>available</c>; <c>options</c> name one label per type.</summary>
+public sealed class ProductVariantDetail : Dto
+{
+    protected override string? EnvelopeKey => "variation";
+
+    public long? VariationId { get; set; }
+
+    public string? Name { get; set; }
+
+    public string? Sku { get; set; }
+
+    public string? CustomSku { get; set; }
+
+    public string? Barcode { get; set; }
+
+    public string? CountryOfOrigin { get; set; }
+
+    public string? HsCode { get; set; }
+
+    public bool? Active { get; set; }
+
+    public IReadOnlyList<ProductVariantOptionReference?>? Options { get; set; }
+
+    public ProductVariantPricing? Pricing { get; set; }
+
+    public ProductVariantInventory? Inventory { get; set; }
+
+    public ProductVariantOrdering? Ordering { get; set; }
+
+    public string? TransactionNo { get; set; }
+
+    public string? Url { get; set; }
+}
+
+/// <summary>The single-variant patch's body, no envelope; partial. The variant is turned on or off as <c>available</c>.</summary>
+public sealed class ProductVariantPatchInput : Dto
+{
+    public bool? Available { get; set; }
+
+    public string? Name { get; set; }
+
+    public string? Sku { get; set; }
+
+    public string? CustomSku { get; set; }
+
+    public string? Barcode { get; set; }
+
+    public string? CountryOfOrigin { get; set; }
+
+    public string? HsCode { get; set; }
+
+    public ProductVariantPricing? Pricing { get; set; }
+
+    public ProductVariantInventory? Inventory { get; set; }
+
+    public ProductVariantOrdering? Ordering { get; set; }
+}
+
+/// <summary>The variant as the single-variant patch answers it: its ids and codes.</summary>
+public sealed class ProductVariantPatched : Dto
+{
+    public long? VariationId { get; set; }
+
+    public string? Name { get; set; }
+
+    public string? Sku { get; set; }
+
+    public string? CustomSku { get; set; }
+
+    public string? Barcode { get; set; }
+
+    public string? CountryOfOrigin { get; set; }
+
+    public string? HsCode { get; set; }
+}
+
+/// <summary>The single-variant patch's answer: <c>status</c>, <c>message</c> and the <c>variation</c>.</summary>
+public sealed class ProductVariantPatchResult : Dto
+{
+    public string? Status { get; set; }
+
+    public string? Message { get; set; }
+
+    public ProductVariantPatched? Variation { get; set; }
 }

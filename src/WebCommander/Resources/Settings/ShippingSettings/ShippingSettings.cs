@@ -2,7 +2,7 @@ using WebCommander.Client;
 
 namespace WebCommander.Resources.Settings.ShippingSettings;
 
-/// <summary>Shipping settings - <c>/admin/settings/shipping_settings</c> - as a typed resource bound to one client.</summary>
+/// <summary>Shipping settings - <c>/admin/settings/shipping_settings/general</c> - as a typed resource bound to one client.</summary>
 public sealed class ShippingSettings : BoundResource
 {
     /// <summary>Bind to a client; normally reached as <c>client.ShippingSettings</c>.</summary>
@@ -10,7 +10,7 @@ public sealed class ShippingSettings : BoundResource
     {
     }
 
-    /// <summary>Read the whole area - <c>GET /admin/settings/shipping_settings</c>.</summary>
+    /// <summary>Read the whole area - <c>GET /admin/settings/shipping_settings/general</c>.</summary>
     public Task<ApiResponse> GetShippingSettingsAsync(
         IReadOnlyDictionary<string, object?>? queryParams = null,
         bool? raiseOnError = null, CancellationToken cancellationToken = default,
@@ -24,7 +24,7 @@ public sealed class ShippingSettings : BoundResource
                 DtoType = typeof(ShippingSettingsDto.ShippingSettings),
             }, cancellationToken);
 
-    /// <summary>Write one field or several - <c>PATCH /admin/settings/shipping_settings</c>.</summary>
+    /// <summary>Write one field or several - <c>PATCH /admin/settings/shipping_settings/general</c>.</summary>
     public Task<ApiResponse> PatchShippingSettingsAsync(
         object payload,
         bool? raiseOnError = null, CancellationToken cancellationToken = default,
@@ -41,7 +41,7 @@ public sealed class ShippingSettings : BoundResource
             }, cancellationToken);
     }
 
-    /// <summary>HEAD the area - <c>HEAD /admin/settings/shipping_settings</c>.</summary>
+    /// <summary>HEAD the area - <c>HEAD /admin/settings/shipping_settings/general</c>.</summary>
     public Task<ApiResponse> HeadShippingSettingsAsync(
         bool? raiseOnError = null, CancellationToken cancellationToken = default,
         string? responseFormat = null) =>

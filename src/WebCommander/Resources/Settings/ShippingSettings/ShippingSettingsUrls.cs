@@ -4,5 +4,5 @@ namespace WebCommander.Resources.Settings.ShippingSettings;
 public static class ShippingSettingsUrls
 {
     public const string ShippingSettings =
-        "/api/{api_version}/admin/settings/shipping_settings";
+        "/api/{api_version}/admin/settings/shipping_settings/general";
 }

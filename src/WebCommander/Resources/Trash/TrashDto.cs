@@ -96,3 +96,28 @@ public sealed class TrashBulkInput : Dto
 {
     public IReadOnlyList<TrashBulkItemInput?>? Items { get; set; }
 }
+
+/// <summary>One link outside the store: the <c>system</c>, its <c>entity</c> and <c>external_id</c>, a <c>name</c>
+/// and the <c>reason</c> it blocks a permanent delete.</summary>
+public sealed class TrashExternalLink : Dto
+{
+    public string? System { get; set; }
+
+    public string? Entity { get; set; }
+
+    public string? Name { get; set; }
+
+    public string? ExternalId { get; set; }
+
+    public string? Reason { get; set; }
+}
+
+/// <summary>The external links of one trashed item: its <c>type</c> and <c>id</c>, and <c>links</c>.</summary>
+public sealed class TrashExternalLinks : Dto
+{
+    public string? Type { get; set; }
+
+    public long? Id { get; set; }
+
+    public IReadOnlyList<TrashExternalLink?>? Links { get; set; }
+}
