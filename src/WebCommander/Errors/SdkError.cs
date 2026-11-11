@@ -226,7 +226,8 @@ public class SdkError : Exception
         hints[400] = "the API rejected the request itself - check the payload shape and " +
                      "the query parameter names against the endpoint's documentation";
         hints[401] = "credentials were rejected, or the token expired and could not be " +
-                     "renewed - check ClientId, ClientSecret and AuthString";
+                     "renewed - check ClientId, ClientSecret and AuthString, or AuthBaseUrl " +
+                     "for a Hykmah client";
         hints[403] = "authenticated, but this client is not allowed to do that";
         hints[404] = "no such record - check the id you passed actually exists";
         hints[405] = "wrong HTTP method for this path";

@@ -83,10 +83,10 @@ public sealed class FileTokenStore : ITokenStore
     /// <summary>A 16-hex-character fingerprint that identifies credentials without carrying them.</summary>
     public static string BuildCredentialsNamespace(
         string? baseUrl, string? clientId, string? clientSecret = "",
-        string? authString = "", string? grantType = "")
+        string? authString = "", string? grantType = "", string? authBaseUrl = "")
     {
         var material = new StringBuilder();
-        foreach (var value in new[] { "v3", baseUrl, clientId, clientSecret, authString, grantType })
+        foreach (var value in new[] { "v4", baseUrl, clientId, clientSecret, authString, grantType, authBaseUrl })
         {
             var text = value ?? "";
             // Code points, not text.Length: UTF-16 units would tie the fingerprint to the encoding.

@@ -7,7 +7,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
 
     <PackageId>WebCommander</PackageId>
-    <Version>4.0.1</Version>
+    <Version>4.0.2</Version>
     <Authors>WebCommander</Authors>
     <Description>.NET SDK for the WebCommander v4 REST API.</Description>
 

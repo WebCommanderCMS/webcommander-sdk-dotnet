@@ -307,6 +307,9 @@ public sealed partial class SdkConfig
 
     public string AuthString => Auth.AuthString;
 
+    /// <summary>The Hykmah origin that issues the token, or <c>null</c> for the store, from <see cref="Auth"/>.</summary>
+    public string? AuthBaseUrl => Auth.AuthBaseUrl;
+
     public string GrantType => Auth.GrantType;
 
     public string? TokenCachePath => Auth.TokenCachePath;

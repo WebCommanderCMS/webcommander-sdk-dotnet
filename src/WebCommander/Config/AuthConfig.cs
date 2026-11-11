@@ -24,18 +24,28 @@ public sealed class AuthConfig
         ("authString", self => self.AuthString),
     };
 
+    // Hykmah issues the token from the client alone, so the redirect URI and auth string drop out.
+    private static readonly (string Name, Func<AuthConfig, string> Read)[] HykmahRequiredFieldReaders =
+    {
+        ("baseUrl", self => self.BaseUrl),
+        ("clientId", self => self.ClientId),
+        ("clientSecret", self => self.ClientSecret),
+    };
+
     /// <summary>Construct and validate, reporting every problem in one exception.</summary>
     public AuthConfig(
         string baseUrl,
         string clientId,
         string clientSecret,
-        string redirectUri,
-        string authString,
-        string clientName,
+        string redirectUri = "",
+        string authString = "",
+        string clientName = "",
         string grantType = DefaultGrantType,
-        string? tokenCachePath = UseDefaultTokenCache)
+        string? tokenCachePath = UseDefaultTokenCache,
+        string? authBaseUrl = null)
     {
         BaseUrl = NormaliseBaseUrl(baseUrl);
+        AuthBaseUrl = NormaliseAuthBaseUrl(authBaseUrl);
         ClientId = clientId;
         ClientSecret = clientSecret;
         RedirectUri = redirectUri;
@@ -66,6 +76,12 @@ public sealed class AuthConfig
     /// <summary>The instance origin, trailing slashes stripped.</summary>
     public string BaseUrl { get; }
 
+    /// <summary>The Hykmah origin that issues the token, or <c>null</c> to ask the store at <see cref="BaseUrl"/>.</summary>
+    public string? AuthBaseUrl { get; }
+
+    /// <summary>Whether the token comes from Hykmah rather than from the store itself.</summary>
+    public bool UsesHykmah => AuthBaseUrl is not null;
+
     public string ClientId { get; }
 
     /// <summary>The OAuth client secret; redacted by <see cref="ToString"/>.</summary>
@@ -93,7 +109,8 @@ public sealed class AuthConfig
         string? authString = null,
         string? clientName = null,
         string? grantType = null,
-        string? tokenCachePath = KeepTokenCachePath)
+        string? tokenCachePath = KeepTokenCachePath,
+        string? authBaseUrl = null)
     {
         return new AuthConfig(
             baseUrl ?? BaseUrl,
@@ -103,7 +120,8 @@ public sealed class AuthConfig
             authString ?? AuthString,
             clientName ?? ClientName,
             grantType ?? GrantType,
-            tokenCachePath == KeepTokenCachePath ? TokenCachePath : tokenCachePath);
+            tokenCachePath == KeepTokenCachePath ? TokenCachePath : tokenCachePath,
+            authBaseUrl ?? AuthBaseUrl);
     }
 
     /// <summary>Credentials redacted, so safe to log.</summary>
@@ -118,6 +136,7 @@ public sealed class AuthConfig
     {
         nameof(BaseUrl), nameof(ClientId), nameof(ClientSecret), nameof(RedirectUri),
         nameof(AuthString), nameof(ClientName), nameof(GrantType), nameof(TokenCachePath),
+        nameof(AuthBaseUrl),
     };
 
     private void Validate(string? tokenCachePath)
@@ -125,7 +144,7 @@ public sealed class AuthConfig
         var problems = new List<string>();
 
         var missing = new List<string>();
-        foreach (var (name, read) in RequiredFieldReaders)
+        foreach (var (name, read) in UsesHykmah ? HykmahRequiredFieldReaders : RequiredFieldReaders)
         {
             if (IsBlank(read(this)))
                 missing.Add(name);
@@ -134,7 +153,10 @@ public sealed class AuthConfig
             problems.Add("missing required values: " + string.Join(", ", missing));
 
         if (!IsBlank(BaseUrl))
-            problems.AddRange(ProblemsWithTheBaseUrl(BaseUrl));
+            problems.AddRange(ProblemsWithTheBaseUrl(BaseUrl, "baseUrl"));
+
+        if (AuthBaseUrl is not null)
+            problems.AddRange(ProblemsWithTheBaseUrl(AuthBaseUrl, "authBaseUrl"));
 
         if (IsBlank(ClientName))
             problems.Add("clientName: must not be blank");
@@ -165,27 +187,34 @@ public sealed class AuthConfig
         return raw.Trim().TrimEnd('/');
     }
 
-    private static List<string> ProblemsWithTheBaseUrl(string baseUrl)
+    // Blank means not set, so an empty .env entry keeps the store flow.
+    private static string? NormaliseAuthBaseUrl(string? raw)
+    {
+        var trimmed = raw?.Trim().TrimEnd('/');
+        return string.IsNullOrEmpty(trimmed) ? null : trimmed;
+    }
+
+    private static List<string> ProblemsWithTheBaseUrl(string baseUrl, string name)
     {
         var problems = new List<string>();
         if (!Uri.TryCreate(baseUrl, UriKind.Absolute, out var parsed))
         {
-            problems.Add($"baseUrl: is not a URL, got '{baseUrl}'");
+            problems.Add($"{name}: is not a URL, got '{baseUrl}'");
             return problems;
         }
 
         var scheme = parsed.Scheme.ToLowerInvariant();
         if ((scheme != "http" && scheme != "https") || string.IsNullOrEmpty(parsed.Host))
         {
-            problems.Add("baseUrl: must start with http:// or https:// and include a host, "
+            problems.Add($"{name}: must start with http:// or https:// and include a host, "
                 + $"got '{baseUrl}'");
             return problems;
         }
         if (!string.IsNullOrEmpty(parsed.UserInfo))
-            problems.Add($"baseUrl: host {parsed.Host} carries embedded credentials, which would "
+            problems.Add($"{name}: host {parsed.Host} carries embedded credentials, which would "
                 + "replace the bearer token; strip the userinfo");
         if (!string.IsNullOrEmpty(parsed.Query) || !string.IsNullOrEmpty(parsed.Fragment))
-            problems.Add("baseUrl: must be the instance origin only, with no query string or "
+            problems.Add($"{name}: must be the origin only, with no query string or "
                 + $"fragment, got '{baseUrl}'");
         return problems;
     }

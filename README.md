@@ -51,6 +51,23 @@ foreach (var row in (IEnumerable<object?>)body["customers"]!)
 OAuth2 token for you. `raiseOnError: true` makes a failed call throw; without it, a failed call
 returns a response with `Succeeded == false`.
 
+### Hykmah sign-in
+
+A store whose API client was issued through Hykmah gets its token from Hykmah instead of from the
+store. Pass the Hykmah address as `authBaseUrl`; `redirectUri` and `authString` are not needed:
+
+```csharp
+var auth = new AuthConfig(
+    baseUrl:      Environment.GetEnvironmentVariable("WC_BASE_URL")!,
+    clientId:     Environment.GetEnvironmentVariable("WC_CLIENT_ID")!,
+    clientSecret: Environment.GetEnvironmentVariable("WC_CLIENT_SECRET")!,
+    clientName:   "default",
+    authBaseUrl:  Environment.GetEnvironmentVariable("WC_AUTH_BASE_URL"));
+```
+
+Only the token request goes to `authBaseUrl`. Every API call still goes to `baseUrl`. Leave
+`authBaseUrl` unset to get the token from the store with `redirectUri` and `authString`.
+
 ## Configuration
 
 `AuthConfig` holds the credentials for one store. `SdkConfig` holds everything else, and every

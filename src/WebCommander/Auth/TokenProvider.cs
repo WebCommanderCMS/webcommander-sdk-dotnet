@@ -16,6 +16,9 @@ public sealed class TokenProvider
     public static string BuildTokenPath(string apiVersion) =>
         TokenPathTemplate.Replace("{api_version}", apiVersion, StringComparison.Ordinal);
 
+    /// <summary>The token path on the Hykmah origin set as <c>AuthBaseUrl</c>.</summary>
+    public const string HykmahTokenPath = "/api/v1/oauth/token";
+
     private const string RefreshGrantType = "refresh_token";
 
     private readonly SdkConfig _config;
@@ -28,10 +31,11 @@ public sealed class TokenProvider
         _config = config;
         _transport = transport;
         _tokenStore = tokenStore;
-        _tokenPath = BuildTokenPath(config.ApiVersion!);
+        _tokenPath = config.Auth.UsesHykmah ? HykmahTokenPath : BuildTokenPath(config.ApiVersion!);
     }
 
-    public string TokenUrl => _config.BaseUrl + _tokenPath;
+    /// <summary>The Hykmah origin when <c>AuthBaseUrl</c> is set, otherwise the store's base URL, joined with the token path.</summary>
+    public string TokenUrl => (_config.Auth.AuthBaseUrl ?? _config.BaseUrl) + _tokenPath;
 
     /// <summary>A usable access token, fetched only if needed.</summary>
     public async Task<string> GetAccessTokenAsync(CancellationToken cancellationToken = default)
@@ -84,11 +88,7 @@ public sealed class TokenProvider
     private async Task<TokenRecord> RequestTokenWithCredentialsAsync(CancellationToken cancellationToken)
     {
         var response = await _transport.SendHttpRequestAsync(
-            new TransportRequest("POST", TokenUrl)
-            {
-                JsonBody = CredentialsPayload(),
-                Headers = TokenHeaders(),
-            },
+            BuildTokenRequest(CredentialsPayload()),
             cancellationToken).ConfigureAwait(false);
 
         if (!response.Succeeded)
@@ -96,7 +96,10 @@ public sealed class TokenProvider
             var messages = response.GetErrorMessages();
             var error = new SdkAuthError(Redaction.RedactMessageText(
                 $"token request failed with {response.StatusCode}: "
-                    + (messages.Count == 0 ? "no detail" : messages[0])),
+                    + (messages.Count == 0 ? "no detail" : messages[0])
+                    + (_config.Auth.UsesHykmah
+                        ? "; check client_id, client_secret, grant_type and auth_base_url"
+                        : "")),
                 response.StatusCode,
                 response.ErrorType,
                 Redaction.RedactValue(response.Map),
@@ -109,14 +112,27 @@ public sealed class TokenProvider
         return BuildTokenRecord(response, null);
     }
 
-    private Dictionary<string, object?> CredentialsPayload() => new()
-    {
-        ["grant_type"] = _config.Auth.GrantType,
-        ["auth_string"] = _config.Auth.AuthString,
-        ["redirect_uri"] = _config.Auth.RedirectUri,
-        ["client_id"] = _config.Auth.ClientId,
-        ["client_secret"] = _config.Auth.ClientSecret,
-    };
+    private Dictionary<string, object?> CredentialsPayload() => _config.Auth.UsesHykmah
+        ? new()
+        {
+            ["grant_type"] = _config.Auth.GrantType,
+            ["client_id"] = _config.Auth.ClientId,
+            ["client_secret"] = _config.Auth.ClientSecret,
+        }
+        : new()
+        {
+            ["grant_type"] = _config.Auth.GrantType,
+            ["auth_string"] = _config.Auth.AuthString,
+            ["redirect_uri"] = _config.Auth.RedirectUri,
+            ["client_id"] = _config.Auth.ClientId,
+            ["client_secret"] = _config.Auth.ClientSecret,
+        };
+
+    // Hykmah refuses a JSON body, so it gets a form; the store keeps JSON.
+    private TransportRequest BuildTokenRequest(Dictionary<string, object?> payload) =>
+        _config.Auth.UsesHykmah
+            ? new TransportRequest("POST", TokenUrl) { FormData = payload, Headers = TokenHeaders() }
+            : new TransportRequest("POST", TokenUrl) { JsonBody = payload, Headers = TokenHeaders() };
 
     private async Task<TokenRecord?> RequestTokenWithRefreshGrantAsync(
         string refreshToken, CancellationToken cancellationToken)
@@ -125,14 +141,15 @@ public sealed class TokenProvider
         {
             ["grant_type"] = RefreshGrantType,
             ["refresh_token"] = refreshToken,
-            ["redirect_uri"] = _config.Auth.RedirectUri,
-            ["client_id"] = _config.Auth.ClientId,
-            ["client_secret"] = _config.Auth.ClientSecret,
         };
+        if (!_config.Auth.UsesHykmah)
+            payload["redirect_uri"] = _config.Auth.RedirectUri;
+        payload["client_id"] = _config.Auth.ClientId;
+        payload["client_secret"] = _config.Auth.ClientSecret;
         try
         {
             var response = await _transport.SendHttpRequestAsync(
-                new TransportRequest("POST", TokenUrl) { JsonBody = payload, Headers = TokenHeaders() },
+                BuildTokenRequest(payload),
                 cancellationToken).ConfigureAwait(false);
             return response.Succeeded ? BuildTokenRecord(response, refreshToken) : null;
         }

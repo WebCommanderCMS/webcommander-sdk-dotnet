@@ -131,7 +131,8 @@ public sealed class WebCommanderClient : IAsyncDisposable, IDisposable
             : new FileTokenStore(
                 auth.TokenCachePath,
                 FileTokenStore.BuildCredentialsNamespace(
-                    auth.BaseUrl, auth.ClientId, auth.ClientSecret, auth.AuthString, auth.GrantType),
+                    auth.BaseUrl, auth.ClientId, auth.ClientSecret, auth.AuthString, auth.GrantType,
+                    auth.AuthBaseUrl),
                 maxBytes: config.MaxTokenCacheBytes);
     }
 
