@@ -12,7 +12,7 @@ public sealed class Orders : BoundResource
     }
 
     /// <summary>List orders - <c>GET /admin/orders</c>, newest first; cancelled ones only under <c>order_status</c>.
-    /// <c>limit</c> caps at 20, <c>customerId</c> takes a customer's <c>internal_id</c>, an unknown name is <c>400</c>.</summary>
+    /// <c>limit</c> caps at 20, <c>customerId</c> takes a <c>customer_id</c>, an unknown name is <c>400</c>.</summary>
     public Task<ApiResponse> ListOrdersAsync(
         IReadOnlyDictionary<string, object?>? queryParams = null,
         bool? raiseOnError = null, CancellationToken cancellationToken = default,
@@ -218,16 +218,15 @@ public sealed class Orders : BoundResource
             }, cancellationToken);
     }
 
-    /// <summary>An order's custom field values - <c>GET /admin/orders/{order_internal_id}/custom_fields</c>.
-    /// <paramref name="orderInternalId"/> is the order's <c>internal_id</c>: an <c>order_id</c> reads the order holding it as its <c>internal_id</c>.</summary>
+    /// <summary>An order's custom field values - <c>GET /admin/orders/{order_id}/custom_fields</c>.</summary>
     public Task<ApiResponse> GetOrderCustomFieldsAsync(
-        object orderInternalId,
+        object orderId,
         bool? raiseOnError = null, CancellationToken cancellationToken = default,
         string? responseFormat = null) =>
         Client.SendGetRequestAsync(OrdersUrls.OrderCustomFields,
             new RequestOptions
             {
-                PathParams = new Dictionary<string, object?> { ["order_internal_id"] = orderInternalId },
+                PathParams = new Dictionary<string, object?> { ["order_id"] = orderId },
                 RaiseOnError = raiseOnError,
                 ResponseFormat = responseFormat,
                 DtoType = typeof(OrdersDto.OrderCustomFields),
@@ -311,16 +310,15 @@ public sealed class Orders : BoundResource
             }, cancellationToken);
     }
 
-    /// <summary>Email the invoice - <c>POST /admin/orders/{order_internal_id}/send-invoice</c>; no body.
-    /// <paramref name="orderInternalId"/> is the order's <c>internal_id</c>, as on <see cref="GetOrderCustomFieldsAsync"/>.</summary>
+    /// <summary>Email the invoice - <c>POST /admin/orders/{order_id}/send-invoice</c>; no body.</summary>
     public Task<ApiResponse> SendOrderInvoiceAsync(
-        object orderInternalId,
+        object orderId,
         bool? raiseOnError = null, CancellationToken cancellationToken = default,
         string? responseFormat = null) =>
         Client.SendPostRequestAsync(OrdersUrls.OrderSendInvoice,
             new RequestOptions
             {
-                PathParams = new Dictionary<string, object?> { ["order_internal_id"] = orderInternalId },
+                PathParams = new Dictionary<string, object?> { ["order_id"] = orderId },
                 RaiseOnError = raiseOnError,
                 ResponseFormat = responseFormat,
                 DtoType = typeof(InvoiceDispatch),

@@ -25,17 +25,6 @@ public sealed class TaxRules : BoundResource
                 DtoType = typeof(TaxRulePage),
             }, cancellationToken);
 
-    /// <summary>HEAD the tax rule collection - <c>HEAD /admin/tax_rules</c>.</summary>
-    public Task<ApiResponse> HeadTaxRulesAsync(
-        bool? raiseOnError = null, CancellationToken cancellationToken = default,
-        string? responseFormat = null) =>
-        Client.SendApiRequestAsync("HEAD", TaxRulesUrls.TaxRules,
-            new RequestOptions
-            {
-                RaiseOnError = raiseOnError,
-                ResponseFormat = responseFormat,
-            }, cancellationToken);
-
     /// <summary>Create a tax rule - <c>POST /admin/tax_rules</c>; only name and description are read.</summary>
     public Task<ApiResponse> CreateTaxRuleAsync(
         object payload,
@@ -65,19 +54,6 @@ public sealed class TaxRules : BoundResource
                 RaiseOnError = raiseOnError,
                 ResponseFormat = responseFormat,
                 DtoType = typeof(TaxRule),
-            }, cancellationToken);
-
-    /// <summary>HEAD one tax rule - <c>HEAD /admin/tax_rules/{tax_rule_id}</c>.</summary>
-    public Task<ApiResponse> HeadTaxRuleAsync(
-        object taxRuleId,
-        bool? raiseOnError = null, CancellationToken cancellationToken = default,
-        string? responseFormat = null) =>
-        Client.SendApiRequestAsync("HEAD", TaxRulesUrls.TaxRule,
-            new RequestOptions
-            {
-                PathParams = Id(taxRuleId),
-                RaiseOnError = raiseOnError,
-                ResponseFormat = responseFormat,
             }, cancellationToken);
 
     /// <summary>Update one tax rule - <c>PUT /admin/tax_rules/{tax_rule_id}</c>, a merge.</summary>

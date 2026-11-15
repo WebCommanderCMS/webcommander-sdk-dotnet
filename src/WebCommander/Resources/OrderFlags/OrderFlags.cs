@@ -25,17 +25,6 @@ public sealed class OrderFlags : BoundResource
                 DtoType = typeof(OrderFlagPage),
             }, cancellationToken);
 
-    /// <summary>HEAD the flag collection - <c>HEAD /admin/order_flags</c>.</summary>
-    public Task<ApiResponse> HeadOrderFlagsAsync(
-        bool? raiseOnError = null, CancellationToken cancellationToken = default,
-        string? responseFormat = null) =>
-        Client.SendApiRequestAsync("HEAD", OrderFlagsUrls.OrderFlags,
-            new RequestOptions
-            {
-                RaiseOnError = raiseOnError,
-                ResponseFormat = responseFormat,
-            }, cancellationToken);
-
     /// <summary>Create a flag - <c>POST /admin/order_flags</c>.</summary>
     public Task<ApiResponse> CreateOrderFlagAsync(
         object payload,
@@ -65,19 +54,6 @@ public sealed class OrderFlags : BoundResource
                 RaiseOnError = raiseOnError,
                 ResponseFormat = responseFormat,
                 DtoType = typeof(OrderFlag),
-            }, cancellationToken);
-
-    /// <summary>HEAD one flag - <c>HEAD /admin/order_flags/{order_flag_id}</c>.</summary>
-    public Task<ApiResponse> HeadOrderFlagAsync(
-        object orderFlagId,
-        bool? raiseOnError = null, CancellationToken cancellationToken = default,
-        string? responseFormat = null) =>
-        Client.SendApiRequestAsync("HEAD", OrderFlagsUrls.OrderFlag,
-            new RequestOptions
-            {
-                PathParams = Id(orderFlagId),
-                RaiseOnError = raiseOnError,
-                ResponseFormat = responseFormat,
             }, cancellationToken);
 
     /// <summary>Replace one flag - <c>PUT /admin/order_flags/{order_flag_id}</c>; send every field to keep.</summary>

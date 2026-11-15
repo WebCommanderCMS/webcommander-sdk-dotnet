@@ -32,13 +32,11 @@ public static class OrdersUrls
     public const string OrderUpdateStatus =
         "/api/{api_version}/admin/orders/{order_id}/update-status";
 
-    /// <summary>Resolves its slot against the order's <c>internal_id</c>: an <c>order_id</c> there names another order, or none.</summary>
     public const string OrderCustomFields =
-        "/api/{api_version}/admin/orders/{order_internal_id}/custom_fields";
+        "/api/{api_version}/admin/orders/{order_id}/custom_fields";
 
-    /// <summary>Resolves its slot against the order's <c>internal_id</c>, as <see cref="OrderCustomFields"/> does.</summary>
     public const string OrderSendInvoice =
-        "/api/{api_version}/admin/orders/{order_internal_id}/send-invoice";
+        "/api/{api_version}/admin/orders/{order_id}/send-invoice";
 
     public const string PaymentRefunds = "/api/{api_version}/admin/payment/{payment_id}/refunds";
 

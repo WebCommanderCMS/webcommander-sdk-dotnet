@@ -248,7 +248,7 @@ public sealed class Products : BoundResource
     /// <summary>List a special selection of products - <c>GET /admin/products/special</c>. <c>type</c> is required:
     /// <c>onSale</c>, <c>featured</c>, <c>new</c>, <c>topSelling</c>, <c>lastBought</c> or <c>lastViewed</c>.
     /// <c>max</c> (1 to 100, default 10) and <c>offset</c> page it. The last two are per customer and need
-    /// <c>customerId</c> (the <c>customer_id</c> or <c>internal_id</c> of a customer) or <c>customer_email</c>;
+    /// <c>customerId</c> (a customer's <c>customer_id</c>) or <c>customer_email</c>;
     /// <c>customer_id</c> is not read, and an unknown customer is <c>400 unknown_reference</c>. A name it does not
     /// know is ignored.</summary>
     public Task<ApiResponse> ListSpecialProductsAsync(

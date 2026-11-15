@@ -25,17 +25,6 @@ public sealed class TaxCodes : BoundResource
                 DtoType = typeof(TaxCodePage),
             }, cancellationToken);
 
-    /// <summary>HEAD the tax code collection - <c>HEAD /admin/tax_codes</c>.</summary>
-    public Task<ApiResponse> HeadTaxCodesAsync(
-        bool? raiseOnError = null, CancellationToken cancellationToken = default,
-        string? responseFormat = null) =>
-        Client.SendApiRequestAsync("HEAD", TaxCodesUrls.TaxCodes,
-            new RequestOptions
-            {
-                RaiseOnError = raiseOnError,
-                ResponseFormat = responseFormat,
-            }, cancellationToken);
-
     /// <summary>Create a tax code - <c>POST /admin/tax_codes</c>.</summary>
     public Task<ApiResponse> CreateTaxCodeAsync(
         object payload,
@@ -65,19 +54,6 @@ public sealed class TaxCodes : BoundResource
                 RaiseOnError = raiseOnError,
                 ResponseFormat = responseFormat,
                 DtoType = typeof(TaxCode),
-            }, cancellationToken);
-
-    /// <summary>HEAD one tax code - <c>HEAD /admin/tax_codes/{tax_code_id}</c>.</summary>
-    public Task<ApiResponse> HeadTaxCodeAsync(
-        object taxCodeId,
-        bool? raiseOnError = null, CancellationToken cancellationToken = default,
-        string? responseFormat = null) =>
-        Client.SendApiRequestAsync("HEAD", TaxCodesUrls.TaxCode,
-            new RequestOptions
-            {
-                PathParams = Id(taxCodeId),
-                RaiseOnError = raiseOnError,
-                ResponseFormat = responseFormat,
             }, cancellationToken);
 
     /// <summary>Update one tax code - <c>PUT /admin/tax_codes/{tax_code_id}</c>; resend priority and resolver_type.</summary>

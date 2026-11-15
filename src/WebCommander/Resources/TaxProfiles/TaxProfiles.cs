@@ -25,17 +25,6 @@ public sealed class TaxProfiles : BoundResource
                 DtoType = typeof(TaxProfilePage),
             }, cancellationToken);
 
-    /// <summary>HEAD the tax profile collection - <c>HEAD /admin/tax_profiles</c>.</summary>
-    public Task<ApiResponse> HeadTaxProfilesAsync(
-        bool? raiseOnError = null, CancellationToken cancellationToken = default,
-        string? responseFormat = null) =>
-        Client.SendApiRequestAsync("HEAD", TaxProfilesUrls.TaxProfiles,
-            new RequestOptions
-            {
-                RaiseOnError = raiseOnError,
-                ResponseFormat = responseFormat,
-            }, cancellationToken);
-
     /// <summary>Create a tax profile - <c>POST /admin/tax_profiles</c>; send no <c>id</c>.</summary>
     public Task<ApiResponse> CreateTaxProfileAsync(
         object payload,
@@ -65,19 +54,6 @@ public sealed class TaxProfiles : BoundResource
                 RaiseOnError = raiseOnError,
                 ResponseFormat = responseFormat,
                 DtoType = typeof(TaxProfile),
-            }, cancellationToken);
-
-    /// <summary>HEAD one tax profile - <c>HEAD /admin/tax_profiles/{tax_profile_id}</c>.</summary>
-    public Task<ApiResponse> HeadTaxProfileAsync(
-        object taxProfileId,
-        bool? raiseOnError = null, CancellationToken cancellationToken = default,
-        string? responseFormat = null) =>
-        Client.SendApiRequestAsync("HEAD", TaxProfilesUrls.TaxProfile,
-            new RequestOptions
-            {
-                PathParams = Id(taxProfileId),
-                RaiseOnError = raiseOnError,
-                ResponseFormat = responseFormat,
             }, cancellationToken);
 
     /// <summary>Update one tax profile - <c>PUT /admin/tax_profiles/{tax_profile_id}</c>, a merge.</summary>

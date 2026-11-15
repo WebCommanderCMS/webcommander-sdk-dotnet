@@ -25,17 +25,6 @@ public sealed class ShippingClasses : BoundResource
                 DtoType = typeof(ShippingClassPage),
             }, cancellationToken);
 
-    /// <summary>HEAD the class collection - <c>HEAD /admin/shipping_classes</c>.</summary>
-    public Task<ApiResponse> HeadShippingClassesAsync(
-        bool? raiseOnError = null, CancellationToken cancellationToken = default,
-        string? responseFormat = null) =>
-        Client.SendApiRequestAsync("HEAD", ShippingClassesUrls.ShippingClasses,
-            new RequestOptions
-            {
-                RaiseOnError = raiseOnError,
-                ResponseFormat = responseFormat,
-            }, cancellationToken);
-
     /// <summary>Count the classes - <c>GET /admin/shipping_classes/count</c>.</summary>
     public Task<ApiResponse> CountShippingClassesAsync(
         IReadOnlyDictionary<string, object?>? queryParams = null,
@@ -81,19 +70,6 @@ public sealed class ShippingClasses : BoundResource
                 RaiseOnError = raiseOnError,
                 ResponseFormat = responseFormat,
                 DtoType = typeof(ShippingClass),
-            }, cancellationToken);
-
-    /// <summary>HEAD one class - <c>HEAD /admin/shipping_classes/{shipping_class_id}</c>.</summary>
-    public Task<ApiResponse> HeadShippingClassAsync(
-        object shippingClassId,
-        bool? raiseOnError = null, CancellationToken cancellationToken = default,
-        string? responseFormat = null) =>
-        Client.SendApiRequestAsync("HEAD", ShippingClassesUrls.ShippingClass,
-            new RequestOptions
-            {
-                PathParams = Id(shippingClassId),
-                RaiseOnError = raiseOnError,
-                ResponseFormat = responseFormat,
             }, cancellationToken);
 
     /// <summary>Replace one class - <c>PUT /admin/shipping_classes/{shipping_class_id}</c>.</summary>

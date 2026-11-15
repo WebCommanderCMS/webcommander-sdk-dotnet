@@ -25,17 +25,6 @@ public sealed class TaxZones : BoundResource
                 DtoType = typeof(TaxZonePage),
             }, cancellationToken);
 
-    /// <summary>HEAD the tax zone collection - <c>HEAD /admin/tax_zones</c>.</summary>
-    public Task<ApiResponse> HeadTaxZonesAsync(
-        bool? raiseOnError = null, CancellationToken cancellationToken = default,
-        string? responseFormat = null) =>
-        Client.SendApiRequestAsync("HEAD", TaxZonesUrls.TaxZones,
-            new RequestOptions
-            {
-                RaiseOnError = raiseOnError,
-                ResponseFormat = responseFormat,
-            }, cancellationToken);
-
     /// <summary>Create a tax zone - <c>POST /admin/tax_zones</c>.</summary>
     public Task<ApiResponse> CreateTaxZoneAsync(
         object payload,
@@ -65,19 +54,6 @@ public sealed class TaxZones : BoundResource
                 RaiseOnError = raiseOnError,
                 ResponseFormat = responseFormat,
                 DtoType = typeof(TaxZone),
-            }, cancellationToken);
-
-    /// <summary>HEAD one tax zone - <c>HEAD /admin/tax_zones/{tax_zone_id}</c>.</summary>
-    public Task<ApiResponse> HeadTaxZoneAsync(
-        object taxZoneId,
-        bool? raiseOnError = null, CancellationToken cancellationToken = default,
-        string? responseFormat = null) =>
-        Client.SendApiRequestAsync("HEAD", TaxZonesUrls.TaxZone,
-            new RequestOptions
-            {
-                PathParams = Id(taxZoneId),
-                RaiseOnError = raiseOnError,
-                ResponseFormat = responseFormat,
             }, cancellationToken);
 
     /// <summary>Update one tax zone - <c>PUT /admin/tax_zones/{tax_zone_id}</c>; it replaces the lists.</summary>

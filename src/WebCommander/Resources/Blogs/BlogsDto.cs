@@ -32,10 +32,13 @@ public sealed class BlogAuthor : Dto
     public string? Name { get; set; }
 }
 
-/// <summary>One customer, by <c>internal_id</c>, or one customer group a restricted blog is shown to.</summary>
+/// <summary>One customer, by <c>customer_id</c>, or one customer group a restricted blog is shown to. A customer also
+/// carries its <c>internal_id</c>, for reference.</summary>
 public sealed class BlogAudienceMember : Dto
 {
     public long? Id { get; set; }
+
+    public long? InternalId { get; set; }
 
     public string? Name { get; set; }
 }
@@ -48,7 +51,7 @@ public sealed class BlogAudience : Dto
     public IReadOnlyList<BlogAudienceMember?>? Groups { get; set; }
 }
 
-/// <summary>The audience a write names: customer <c>internal_id</c> values and customer group ids; a <c>customer_id</c> is dropped.</summary>
+/// <summary>The audience a write names: customer <c>customer_id</c> values and customer group ids.</summary>
 public sealed class BlogAudienceInput : Dto
 {
     public IReadOnlyList<long?>? Customers { get; set; }

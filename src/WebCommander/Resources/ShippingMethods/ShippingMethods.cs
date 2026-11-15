@@ -25,17 +25,6 @@ public sealed class ShippingMethods : BoundResource
                 DtoType = typeof(ShippingMethodPage),
             }, cancellationToken);
 
-    /// <summary>HEAD the method collection - <c>HEAD /admin/shipping_methods</c>.</summary>
-    public Task<ApiResponse> HeadShippingMethodsAsync(
-        bool? raiseOnError = null, CancellationToken cancellationToken = default,
-        string? responseFormat = null) =>
-        Client.SendApiRequestAsync("HEAD", ShippingMethodsUrls.ShippingMethods,
-            new RequestOptions
-            {
-                RaiseOnError = raiseOnError,
-                ResponseFormat = responseFormat,
-            }, cancellationToken);
-
     /// <summary>Count the methods - <c>GET /admin/shipping_methods/count</c>.</summary>
     public Task<ApiResponse> CountShippingMethodsAsync(
         IReadOnlyDictionary<string, object?>? queryParams = null,
@@ -81,19 +70,6 @@ public sealed class ShippingMethods : BoundResource
                 RaiseOnError = raiseOnError,
                 ResponseFormat = responseFormat,
                 DtoType = typeof(ShippingMethod),
-            }, cancellationToken);
-
-    /// <summary>HEAD one method - <c>HEAD /admin/shipping_methods/{shipping_method_id}</c>.</summary>
-    public Task<ApiResponse> HeadShippingMethodAsync(
-        object shippingMethodId,
-        bool? raiseOnError = null, CancellationToken cancellationToken = default,
-        string? responseFormat = null) =>
-        Client.SendApiRequestAsync("HEAD", ShippingMethodsUrls.ShippingMethod,
-            new RequestOptions
-            {
-                PathParams = Id(shippingMethodId),
-                RaiseOnError = raiseOnError,
-                ResponseFormat = responseFormat,
             }, cancellationToken);
 
     /// <summary>Rename one method - <c>PUT /admin/shipping_methods/{shipping_method_id}</c>.</summary>

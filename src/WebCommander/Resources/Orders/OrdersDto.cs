@@ -11,7 +11,7 @@ public sealed class Reference : Dto
 }
 
 /// <summary>The order's <c>customer</c> section, also sent as <c>customer_summary</c>. A listing row carries five
-/// of these keys; <see cref="CustomerId"/> is the public id and <see cref="InternalId"/> the other.</summary>
+/// of these keys. Paths and filters take <see cref="CustomerId"/>; <see cref="InternalId"/> is for reference.</summary>
 public sealed class OrderCustomer : Dto
 {
     public string? FirstName { get; set; }
@@ -489,11 +489,12 @@ public sealed class OrderCommentList : Dto
     public IReadOnlyList<OrderComment?>? Comments { get; set; }
 }
 
-/// <summary>An order's custom field values; <see cref="OrderId"/> echoes the <c>internal_id</c> asked for, and a
-/// <c>delivery</c> order adds <see cref="DeliveryCost"/>.</summary>
+/// <summary>An order's custom field values; a <c>delivery</c> order adds <see cref="DeliveryCost"/>.</summary>
 public sealed class OrderCustomFields : Dto
 {
     public long? OrderId { get; set; }
+
+    public long? InternalId { get; set; }
 
     public IReadOnlyList<object?>? CustomFields { get; set; }
 
@@ -585,7 +586,7 @@ public sealed class OrderRefundRecordLine : Dto
     public bool? LineFullyRefunded { get; set; }
 }
 
-/// <summary>One refund an order holds. <see cref="OrderId"/> is the order's internal id. A payment refund fills
+/// <summary>One refund an order holds. A payment refund fills
 /// <see cref="RecordOnly"/> to <see cref="Lines"/>; an order refund leaves them <c>null</c> and <see cref="Lines"/> empty.
 /// <c>gateway_charge_id</c>, <c>gateway_refund_id</c> and <c>failure_cause</c> were <c>null</c> on every refund read,
 /// so they are not typed.</summary>
@@ -628,11 +629,12 @@ public sealed class OrderRefundRecord : Dto
     public string? UpdatedAt { get; set; }
 }
 
-/// <summary>One page of an order's refunds, newest first. <see cref="OrderId"/> is the order's internal id and
-/// <see cref="OrderNo"/> the <c>{order_id}</c> the path took.</summary>
+/// <summary>One page of an order's refunds, newest first; <see cref="OrderNo"/> equals <see cref="OrderId"/>.</summary>
 public sealed class OrderRefundPage : Dto
 {
     public long? OrderId { get; set; }
+
+    public long? InternalId { get; set; }
 
     public long? OrderNo { get; set; }
 
@@ -641,8 +643,8 @@ public sealed class OrderRefundPage : Dto
     public Pagination? Pagination { get; set; }
 }
 
-/// <summary>What a payment refund answers. <see cref="OrderId"/> holds the order's internal id and
-/// <see cref="OrderNo"/> its order id; a replay drops four flags and adds <see cref="IdempotentReplay"/>.</summary>
+/// <summary>What a payment refund answers; <see cref="OrderNo"/> equals <see cref="OrderId"/>. A replay drops four
+/// flags and adds <see cref="IdempotentReplay"/>.</summary>
 public sealed class PaymentRefund : Dto
 {
     public string? Status { get; set; }
@@ -652,6 +654,8 @@ public sealed class PaymentRefund : Dto
     public long? PaymentId { get; set; }
 
     public long? OrderId { get; set; }
+
+    public long? InternalId { get; set; }
 
     public long? OrderNo { get; set; }
 

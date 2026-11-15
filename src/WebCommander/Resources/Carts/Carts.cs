@@ -14,7 +14,7 @@ public sealed class Carts : BoundResource
     }
 
     /// <summary>Add a product to the cart <c>session_id</c> names, creating it - <c>POST /carts</c>, <c>201</c>;
-    /// re-adding raises the line's quantity. <c>customer_id</c> is the customer's <c>internal_id</c>.</summary>
+    /// re-adding raises the line's quantity. <c>customer_id</c> is the customer's <c>customer_id</c>.</summary>
     public Task<ApiResponse> AddCartItemAsync(
         object payload,
         bool? raiseOnError = null, CancellationToken cancellationToken = default,
@@ -117,7 +117,7 @@ public sealed class Carts : BoundResource
             }, cancellationToken);
 
     /// <summary>Turn the cart into an order - <c>POST /admin/orders/carts/{session_id}</c>, <c>201</c>, and the
-    /// cart is gone. <c>customer_id</c> is the customer's <c>customer_id</c>, not its <c>internal_id</c>.
+    /// cart is gone. <c>customer_id</c> is the customer's <c>customer_id</c>.
     /// <paramref name="transactionNo"/> is sent as <c>X-Transaction-No</c> and files the order under that number.</summary>
     public Task<ApiResponse> CreateOrderFromCartAsync(
         string sessionId, object payload, string? transactionNo = null,

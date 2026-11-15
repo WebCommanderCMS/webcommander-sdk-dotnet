@@ -32,8 +32,8 @@ public sealed class ProductParent : Dto
     public bool? IsDisposable { get; set; }
 }
 
-/// <summary>One customer an audience names: <c>id</c> is the customer's <c>customer_id</c>, <c>internal_id</c> its
-/// <c>internal_id</c>.</summary>
+/// <summary>One customer an audience names: <c>id</c> is the customer's <c>customer_id</c>; <c>internal_id</c>
+/// is for reference.</summary>
 public sealed class ProductSelectedCustomer : Dto
 {
     public long? Id { get; set; }

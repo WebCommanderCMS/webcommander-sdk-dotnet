@@ -26,7 +26,6 @@ using WebCommander.Resources.GiftCards;
 using WebCommander.Resources.InventoryLocations;
 using WebCommander.Resources.OrderCustomFields;
 using WebCommander.Resources.OrderFlags;
-using WebCommander.Resources.OrderPreviews;
 using WebCommander.Resources.Orders;
 using WebCommander.Resources.Pages;
 using WebCommander.Resources.PaymentGateways;
@@ -181,6 +180,12 @@ public sealed class WebCommanderClient : IAsyncDisposable, IDisposable
 
     public IReadOnlyList<string> ListResourceNames() =>
         ResourceBinding.RegisteredResourceNames();
+
+    private AdminCarts? _adminCarts;
+
+    /// <summary>The admin cart and checkout endpoints, built on first use.</summary>
+    public AdminCarts AdminCarts =>
+        _adminCarts ??= new AdminCarts(this);
 
     private AdminCustomers? _adminCustomers;
 
@@ -471,12 +476,6 @@ public sealed class WebCommanderClient : IAsyncDisposable, IDisposable
     /// <summary>The order custom field endpoints, built on first use.</summary>
     public OrderCustomFields OrderCustomFields =>
         _orderCustomFields ??= new OrderCustomFields(this);
-
-    private OrderPreviews? _orderPreviews;
-
-    /// <summary>The order preview endpoints, built on first use.</summary>
-    public OrderPreviews OrderPreviews =>
-        _orderPreviews ??= new OrderPreviews(this);
 
     private Orders? _orders;
 

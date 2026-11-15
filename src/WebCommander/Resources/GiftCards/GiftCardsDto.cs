@@ -1,8 +1,8 @@
 namespace WebCommander.Resources.GiftCards.GiftCardsDto;
 
-/// <summary>One gift card. <see cref="Code"/> is what an order preview's <c>gift-card</c> call takes; a card can be
+/// <summary>One gift card. <see cref="Code"/> is what <c>ApplyCheckoutGiftCardAsync</c> takes; a card can be
 /// applied only while <see cref="IsActive"/> and <see cref="IsPaid"/>, with a <see cref="Balance"/> above zero, before
-/// its <see cref="AvailableTo"/> date and with <see cref="Email"/> equal to the previewed customer's email.</summary>
+/// its <see cref="AvailableTo"/> date and with <see cref="Email"/> equal to the cart customer's email.</summary>
 public sealed class GiftCard : Dto
 {
     public long? Id { get; set; }

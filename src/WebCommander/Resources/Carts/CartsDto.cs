@@ -207,7 +207,7 @@ public sealed class CartAddressInput
     public string? StateCode { get; set; }
 }
 
-/// <summary>The add's body, no envelope; <see cref="CustomerId"/> takes the customer's <c>internal_id</c>.</summary>
+/// <summary>The add's body, no envelope; <see cref="CustomerId"/> takes the customer's <c>customer_id</c>.</summary>
 public sealed class CartItemInput : Dto
 {
     public long? ProductId { get; set; }

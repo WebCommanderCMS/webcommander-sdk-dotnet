@@ -10,6 +10,7 @@ public static class ResourceBinding
     private static readonly Dictionary<string, Func<WebCommanderClient, object>> Modules =
         new(StringComparer.Ordinal)
         {
+            ["admin_carts"] = client => client.AdminCarts,
             ["admin_customers"] = client => client.AdminCustomers,
             ["aliases"] = client => client.Aliases,
             ["animation_effects"] = client => client.AnimationEffects,
@@ -37,7 +38,6 @@ public static class ResourceBinding
             ["inventory_locations"] = client => client.InventoryLocations,
             ["order_custom_fields"] = client => client.OrderCustomFields,
             ["order_flags"] = client => client.OrderFlags,
-            ["order_previews"] = client => client.OrderPreviews,
             ["orders"] = client => client.Orders,
             ["pages"] = client => client.Pages,
             ["payment_gateways"] = client => client.PaymentGateways,

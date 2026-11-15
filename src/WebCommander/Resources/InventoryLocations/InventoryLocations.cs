@@ -25,17 +25,6 @@ public sealed class InventoryLocations : BoundResource
                 DtoType = typeof(InventoryLocationPage),
             }, cancellationToken);
 
-    /// <summary>HEAD the location collection - <c>HEAD /admin/inventory_locations</c>.</summary>
-    public Task<ApiResponse> HeadInventoryLocationsAsync(
-        bool? raiseOnError = null, CancellationToken cancellationToken = default,
-        string? responseFormat = null) =>
-        Client.SendApiRequestAsync("HEAD", InventoryLocationsUrls.InventoryLocations,
-            new RequestOptions
-            {
-                RaiseOnError = raiseOnError,
-                ResponseFormat = responseFormat,
-            }, cancellationToken);
-
     /// <summary>Create a location - <c>POST /admin/inventory_locations</c>, with a bare-record body.</summary>
     public Task<ApiResponse> CreateInventoryLocationAsync(
         object payload,
@@ -65,19 +54,6 @@ public sealed class InventoryLocations : BoundResource
                 RaiseOnError = raiseOnError,
                 ResponseFormat = responseFormat,
                 DtoType = typeof(InventoryLocation),
-            }, cancellationToken);
-
-    /// <summary>HEAD one location - <c>HEAD /admin/inventory_locations/{inventory_location_id}</c>.</summary>
-    public Task<ApiResponse> HeadInventoryLocationAsync(
-        object inventoryLocationId,
-        bool? raiseOnError = null, CancellationToken cancellationToken = default,
-        string? responseFormat = null) =>
-        Client.SendApiRequestAsync("HEAD", InventoryLocationsUrls.InventoryLocation,
-            new RequestOptions
-            {
-                PathParams = Id(inventoryLocationId),
-                RaiseOnError = raiseOnError,
-                ResponseFormat = responseFormat,
             }, cancellationToken);
 
     /// <summary>Replace one location, every field - <c>PUT /admin/inventory_locations/{inventory_location_id}</c>.</summary>
