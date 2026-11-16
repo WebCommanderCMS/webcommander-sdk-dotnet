@@ -9,6 +9,7 @@ public static class TaxCustomProfilesUrls
     public const string TaxCustomProfile =
         "/api/{api_version}/admin/tax/custom-profiles/{custom_profile_id}";
 
-    /// <summary>Files a new custom profile under this transaction number; it wins over a different body number.</summary>
+    /// <summary>Files a new custom profile under this transaction number; a different <c>transaction_no</c> beside
+    /// <c>custom_profile</c> is refused with <c>400 header_body_mismatch</c>, and one inside it is ignored.</summary>
     public const string TransactionNoHeader = "X-Transaction-No";
 }

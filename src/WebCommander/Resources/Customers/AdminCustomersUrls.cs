@@ -26,6 +26,8 @@ public static class AdminCustomersUrls
     public const string AdminCustomerStoreCreditAdjustments =
         "/api/{api_version}/admin/customers/{customer_id}/store-credit/adjustments";
 
-    /// <summary>Files the new customer under this transaction number; it beats a <c>transaction_no</c> body field.</summary>
+    /// <summary>Files the new customer under this transaction number; a different <c>transaction_no</c> beside
+    /// <c>customer</c> is refused with <c>400 header_body_mismatch</c>, and one inside <c>customer</c> is
+    /// ignored.</summary>
     public const string TransactionNoHeader = "X-Transaction-No";
 }

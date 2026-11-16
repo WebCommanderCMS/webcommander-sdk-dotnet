@@ -22,6 +22,7 @@ public static class AdminCartsUrls
     public const string AdminCheckoutDeliverySchedules =
         "/api/{api_version}/admin/orders/checkout/{session_id}/delivery_schedules";
 
-    /// <summary>Files the order a checkout places under this transaction number; it beats <c>transaction_no</c>.</summary>
+    /// <summary>Files the order a checkout places under this transaction number; a different top-level
+    /// <c>transaction_no</c> in the body is refused with <c>400 header_body_mismatch</c>.</summary>
     public const string TransactionNoHeader = "X-Transaction-No";
 }

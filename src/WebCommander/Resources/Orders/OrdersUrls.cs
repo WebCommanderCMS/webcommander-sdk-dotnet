@@ -47,6 +47,7 @@ public static class OrdersUrls
     /// <summary>The header a payment refund is refused without; a repeat under one key replays the first refund.</summary>
     public const string IdempotencyKeyHeader = "Idempotency-Key";
 
-    /// <summary>Files a created order under this transaction number; it beats a <c>transaction_no</c> body field.</summary>
+    /// <summary>Files a created order under this transaction number; a different top-level <c>transaction_no</c> is
+    /// refused with <c>400 header_body_mismatch</c>.</summary>
     public const string TransactionNoHeader = "X-Transaction-No";
 }

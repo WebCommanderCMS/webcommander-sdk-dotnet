@@ -72,8 +72,9 @@ public sealed class ShippingRates : BoundResource
     /// <c>ship_by_variation</c> take their costs per row in <c>conditions</c> and refuse a rate-level
     /// <c>shipping_cost</c>. <c>free_shipping</c> always saves <c>calculate_for_entire_order</c> false.
     /// <c>shipping_rule_id</c> attaches the rate to a rule that has none (<c>409</c> otherwise). An unknown field, an
-    /// <c>id</c> or an unwrapped body is <c>400</c>. <paramref name="transactionNo"/> is sent as <c>X-Transaction-No</c>
-    /// and wins over a <c>transaction_no</c> in the body.</summary>
+    /// <c>id</c> or an unwrapped body is <c>400</c>. <paramref name="transactionNo"/> is sent as <c>X-Transaction-No</c>;
+    /// a different <c>transaction_no</c> beside <c>shipping_rate</c> is refused with <c>400 header_body_mismatch</c>, and one
+    /// inside it is ignored.</summary>
     public Task<ApiResponse> CreateShippingRateAsync(
         object payload, string? transactionNo = null,
         bool? raiseOnError = null, CancellationToken cancellationToken = default,

@@ -14,6 +14,8 @@ public static class CategoriesUrls
     public const string CategorySection =
         "/api/{api_version}/admin/categories/{category_id}/{section}";
 
-    /// <summary>Files a new category under this transaction number; it beats <c>category.transaction_no</c>.</summary>
+    /// <summary>Files a new category under this transaction number; a different <c>transaction_no</c> inside
+    /// <c>category</c> is refused with <c>400 header_body_mismatch</c>, and one beside <c>category</c> is
+    /// ignored.</summary>
     public const string TransactionNoHeader = "X-Transaction-No";
 }

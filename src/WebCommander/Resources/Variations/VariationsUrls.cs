@@ -19,6 +19,7 @@ public static class VariationsUrls
     public const string ProductVariationsBulk =
         "/api/{api_version}/admin/products/{product_id}/variations/bulk";
 
-    /// <summary>Tags a write with a transaction number; it wins over a body <c>transaction_no</c> it disagrees with.</summary>
+    /// <summary>Tags a write with a transaction number; a different top-level <c>transaction_no</c> is refused with
+    /// <c>400 header_body_mismatch</c>.</summary>
     public const string TransactionNoHeader = "X-Transaction-No";
 }

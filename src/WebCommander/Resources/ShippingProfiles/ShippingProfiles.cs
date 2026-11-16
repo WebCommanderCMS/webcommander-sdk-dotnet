@@ -69,8 +69,9 @@ public sealed class ShippingProfiles : BoundResource
     /// <summary>Create a profile - <c>POST /admin/shipping_profiles</c>, answered <c>201</c> with a <c>Location</c>. The body is
     /// wrapped in <c>shipping_profile</c> and needs <c>name</c>, unique without regard to case (<c>409</c>);
     /// <c>rule_preference</c> defaults to <c>product_assigned_rule</c>. An unknown field, an <c>id</c> or an unwrapped
-    /// body is <c>400</c>. <paramref name="transactionNo"/> is sent as <c>X-Transaction-No</c> and wins over a
-    /// <c>transaction_no</c> in the body.</summary>
+    /// body is <c>400</c>. <paramref name="transactionNo"/> is sent as <c>X-Transaction-No</c>; a different
+    /// <c>transaction_no</c> beside <c>shipping_profile</c> is refused with <c>400 header_body_mismatch</c>, and one
+    /// inside it is ignored.</summary>
     public Task<ApiResponse> CreateShippingProfileAsync(
         object payload, string? transactionNo = null,
         bool? raiseOnError = null, CancellationToken cancellationToken = default,

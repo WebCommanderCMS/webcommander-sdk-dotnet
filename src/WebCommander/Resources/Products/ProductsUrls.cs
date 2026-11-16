@@ -40,6 +40,8 @@ public static class ProductsUrls
     public const string ProductStockLocation =
         "/api/{api_version}/admin/products/{product_id}/stock/locations/{inventory_location_id}";
 
-    /// <summary>Tags a write with a transaction number; it wins over a body <c>transaction_no</c> it disagrees with.</summary>
+    /// <summary>Tags a write with a transaction number; a different body <c>transaction_no</c> at the place the store
+    /// checks it (top level for a create, beside <c>product</c> for a review import) is refused with
+    /// <c>400 header_body_mismatch</c>, and one elsewhere in the body is ignored.</summary>
     public const string TransactionNoHeader = "X-Transaction-No";
 }

@@ -15,6 +15,7 @@ public static class CartsUrls
     /// <summary>The key the session write takes and answers under, spelled as the store spells it.</summary>
     public const string CartSessionKey = "sessionId";
 
-    /// <summary>Files the order a cart becomes under this transaction number; it beats <c>transaction_no</c>.</summary>
+    /// <summary>Files the order a cart becomes under this transaction number; send it here or in the body, not
+    /// two different numbers.</summary>
     public const string TransactionNoHeader = "X-Transaction-No";
 }

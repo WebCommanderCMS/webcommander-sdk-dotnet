@@ -71,8 +71,8 @@ public sealed class ShippingRules : BoundResource
     /// wrapped in <c>shipping_rule</c> and needs <c>name</c>, unique without regard to case (<c>409</c>).
     /// <c>shipping_class</c>, <c>shipping_rate</c> and <c>zones</c> name records by id, bare or as <c>{"id": ...}</c>;
     /// <c>profile_id</c> adds the rule to a profile. An unknown field, an <c>id</c> or an unwrapped body is <c>400</c>.
-    /// <paramref name="transactionNo"/> is sent as <c>X-Transaction-No</c> and wins over a <c>transaction_no</c> in the
-    /// body.</summary>
+    /// <paramref name="transactionNo"/> is sent as <c>X-Transaction-No</c>; a different <c>transaction_no</c> beside
+    /// <c>shipping_rule</c> is refused with <c>400 header_body_mismatch</c>, and one inside it is ignored.</summary>
     public Task<ApiResponse> CreateShippingRuleAsync(
         object payload, string? transactionNo = null,
         bool? raiseOnError = null, CancellationToken cancellationToken = default,
